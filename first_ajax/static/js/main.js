@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const timeButton = document.querySelector('#time');
   const carButton = document.querySelector('#car');
   const carList = document.querySelector('#list');
+  const customTimeButton = document.querySelector('#custom-time');
+  const timeInput = document.querySelector('#time-input');
 
   rootButton.addEventListener('click', () => {
     axios.get("http://intro-ajax-api.herokuapp.com/")
@@ -33,13 +35,15 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   countButton.addEventListener('click', () => {
-    axios.get("http://intro-ajax-api.herokuapp.com/count")
+    const request = axios.get("http://intro-ajax-api.herokuapp.com/count")
     .then((response) => {
-      console.log('hi!', response.data);
+      console.log('hi!', response)
       const dataElem = document.createElement('section');
       dataElem.innerHTML = response.data;
       document.body.append(dataElem);
     })
+    // var keys = Object.keys(request);
+    // console.log(keys)
   });
 
   timeButton.addEventListener('click', () => {
@@ -47,10 +51,28 @@ document.addEventListener("DOMContentLoaded", function() {
       params: {timezone: 'Asia/Kolkata'}
     })
     .then((response) => {
-      console.log('hi!', response.data);
+      console.log('hi!', response);
       const dataElem = document.createElement('section');
       dataElem.innerHTML = response.data;
       document.body.append(dataElem);
+    })
+  });
+
+  customTimeButton.addEventListener('click', () => {
+    const value = timeInput.value;
+    axios.get("http://intro-ajax-api.herokuapp.com/time", {
+      params: {timezone: value}
+    })
+    .then((response) => {
+      console.log("hi!")
+      const dataElem = document.createElement('section')
+      dataElem.innerText = response.data;
+      document.body.append(dataElem);
+    }).catch(error => {
+      const errorElem = document.createElement('section')
+      errorElem.innerText = 'Not a valid Timezone!';
+      document.body.append(errorElem);
+      console.log('error', error);
     })
   });
 
@@ -64,6 +86,3 @@ document.addEventListener("DOMContentLoaded", function() {
     })
   })
 });
-    // .then((response) => {
-    //   console.log("we did it!")
-    // })
